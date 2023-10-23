@@ -1,4 +1,5 @@
 **Logistic regression, PAM clustering algorithm, Multidimentional Scaling, Decision tree algorithm, Random forest algorithm, Social Network Analysis.**
+
 **На примере базы данных, содержащей информацию о 1000 фильмах и их оценках на сайте IMDB.** 
 Источник размещения базы данных https://www.kaggle.com/datasets/harshitshankhdhar/imdb-dataset-of-top-1000-movies-and-tv-shows/data
 
