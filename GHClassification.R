@@ -81,8 +81,8 @@ scale_color_discrete(name = "Year of release", labels = c('earlier than 1999', '
 ggplot() +
 geom_point(data = data_scores, aes(x = NMDS1, y = NMDS2, color = MainGenre), size = 2.5, alpha = 0.6) +
 annotate(geom = 'label', x = -1, y = 5.5, size = 9.5, label = paste('Stress: ', round(nmds_result$stress, digits = 2)))
-# https://github.com/DatExpN/DataAnalysisExample/blob/main/RPlot3.png
-# https://github.com/DatExpN/DataAnalysisExample/blob/main/RPlot4.png
+# https://github.com/DatExpN/DataAnalysisExample/blob/main/NMDSYear.png
+# https://github.com/DatExpN/DataAnalysisExample/blob/main/NMDSGEnre.png
 
 
 # Как мы видим, в случае жанров или года релиза, визуализация не дает нам однозначно предположить, фильмы какого жанра 
@@ -150,7 +150,7 @@ theme(axis.title.x = element_blank(),
       axis.title.y = element_blank()) + 
 geom_text(aes(label= ..count..), stat = "count", position = position_stack(vjust = 0.5))
 grid.arrange(p1, p2, p3, p4)
-# https://github.com/DatExpN/DataAnalysisExample/blob/main/RPlot5.png
+# https://github.com/DatExpN/DataAnalysisExample/blob/main/ClusteringResult.png
 
 
 # Далее мы будем решать задачу предсказания высокой выручки фильмов. Здесь для нас высокая выручка - 
@@ -170,7 +170,7 @@ library(performance)
 check_collinearity(model_reg)
 library(sjPlot)
 plot_model(model_reg, vline.color = 'red')
-# https://github.com/DatExpN/DataAnalysisExample/blob/main/RPlot6.png
+# https://github.com/DatExpN/DataAnalysisExample/blob/main/OddsRatios.png
 summary(model_reg) # Значимыми для предсказания высокой выручки является переменная длительность фильма и 
 # переменная жанр фильма: фильмы с большей длительностью и жанром Other (так как мы перекодировали переменную жанр, 
 # в этом случае значит, что жанр должен быть не драма, комедия, экшен или криминал) с наибольшей вероятностью соберут 
@@ -191,7 +191,7 @@ library(rpart.plot)
 library(RColorBrewer)
 library(rattle)
 rpart.plot(model, type=2, extra = 1)
-# https://github.com/DatExpN/DataAnalysisExample/blob/main/RPlot7.png
+# https://github.com/DatExpN/DataAnalysisExample/blob/main/DecisionTree.png
 
 # Как и в случае модели логистической регрессии, здесь мы видим, что жанр является важной переменной для предсказания 
 # высокой выручки фильма. Следующая развилка - это год релиза фильма: если релиз был в 1993 или позже, тогда для нас 
@@ -231,4 +231,4 @@ tablerf2 <- table(valid.df$Revenue, tree_predicted2)
 tablerf1
 tablerf2 # смотрим улучшилась ли работа алгоритма по количеству верно распознанных наблюдений
 varImpPlot(modelRandomForest, sort=F) # можем увидеть какие переменные наиболее важны для классификатора
-# https://github.com/DatExpN/DataAnalysisExample/blob/main/RPlot8.png
+# https://github.com/DatExpN/DataAnalysisExample/blob/main/RFVariables.png
