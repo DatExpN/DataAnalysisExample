@@ -57,9 +57,9 @@ geom_point(data = data_scores, aes(x = NMDS1, y = NMDS2, color = Rating), size =
 annotate(geom = 'label', x = -1, y = 5.5, size = 9.5, label = paste('Stress: ', round(nmds_result$stress, digits = 2))) +
 scale_color_discrete(name = "Audience Rating", labels = c('lower than 7.9', '7.9 or higher'))
 ggplot() +
-  geom_point(data = data_scores, aes(x = NMDS1, y = NMDS2, color = Critics), size = 2.5, alpha = 0.6) +
-  annotate(geom = 'label', x = -1, y = 5.5, size = 9.5, label = paste('Stress: ', round(nmds_result$stress, digits = 2))) +
-  scale_color_discrete(name = "Critics Rating", labels = c('lower than 79', '79 or higher'))
+geom_point(data = data_scores, aes(x = NMDS1, y = NMDS2, color = Critics), size = 2.5, alpha = 0.6) +
+annotate(geom = 'label', x = -1, y = 5.5, size = 9.5, label = paste('Stress: ', round(nmds_result$stress, digits = 2))) +
+scale_color_discrete(name = "Critics Rating", labels = c('lower than 79', '79 or higher'))
 # Как мы и предполагали, фильмы разделяются по рейтингу: в нашем случае горизонтальное измерение может быть описано 
 # при помощи информации об оценках аудитории, а вертикальное измерение через информацию об оценках критиков.
 ggplot() +
@@ -69,7 +69,7 @@ scale_color_discrete(name = "Year of release", labels = c('earlier than 1999', '
 ggplot() +
 geom_point(data = data_scores, aes(x = NMDS1, y = NMDS2, color = MainGenre), size = 2.5, alpha = 0.6) +
 annotate(geom = 'label', x = -1, y = 5.5, size = 9.5, label = paste('Stress: ', round(nmds_result$stress, digits = 2)))
-![](https://github.com/DatExpN/DataAnalysisExample/blob/main/1.png)
+![Иллюстрация к проекту](https://github.com/DatExpN/DataAnalysisExample/blob/main/1.png)
 # Как мы видим, в случае жанров или года релиза, визуализация не дает нам однозначно предположить, фильмы какого жанра 
 # (или какого года релиза) будут выше оценены критиками или аудиторией.
 # Перейдем к задаче кластеризации. Для кластеризации мы будем использовать следующие переменные: длительность, год релиза, жанр, выручку, рейтинг аудитории и рейтинг критиков. Так как у нас и числовые, и категориальные переменные, используем алгоритм кластеризации PAM (gower distance).
