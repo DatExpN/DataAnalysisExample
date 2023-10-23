@@ -69,7 +69,7 @@ scale_color_discrete(name = "Year of release", labels = c('earlier than 1999', '
 ggplot() +
 geom_point(data = data_scores, aes(x = NMDS1, y = NMDS2, color = MainGenre), size = 2.5, alpha = 0.6) +
 annotate(geom = 'label', x = -1, y = 5.5, size = 9.5, label = paste('Stress: ', round(nmds_result$stress, digits = 2)))
-![Иллюстрация к проекту](https://github.com/DatExpN/DataAnalysisExample/blob/main/1.png)
+git add DatExpN/DataAnalysisExample/blob/main/1.png
 # Как мы видим, в случае жанров или года релиза, визуализация не дает нам однозначно предположить, фильмы какого жанра 
 # (или какого года релиза) будут выше оценены критиками или аудиторией.
 # Перейдем к задаче кластеризации. Для кластеризации мы будем использовать следующие переменные: длительность, 
