@@ -42,7 +42,7 @@ summary(g2)
 # Красным цветом обозначены вершины, попавшие в ядро, размер выделяет вершины с числом контактов больше 20.
 
 plot(g2, edge.curved = 0.2, vertex.color= ifelse(V(g2)$core > 0, 'red', 'grey'), vertex.size = ifelse(V(g2)$degree > 20, 6, 2.5), layout=layout_with_fr, vertex.label = NA)
-# https://github.com/DatExpN/DataAnalysisExample/blob/main/RPlot9.png
+# https://github.com/DatExpN/DataAnalysisExample/blob/main/Graph.png
 
 
 # Посмотрим, какие актеры имеют наибольшее число контактов в индустрии 
@@ -57,4 +57,4 @@ library(ggplot2)
 actors2$Actor <- factor(actors2$Actor, levels = actors2$Actor[order(actors2$Number_of_contacts, decreasing = FALSE)])
 ggplot(actors2, aes(x=Actor, y=Number_of_contacts)) + 
 geom_bar(stat = "identity", fill = ifelse(actors2$Number_of_contacts > 20, 'red', 'grey')) + coord_flip()
-# https://github.com/DatExpN/DataAnalysisExample/blob/main/RPlot10.png
+# https://github.com/DatExpN/DataAnalysisExample/blob/main/PopularActors.png
