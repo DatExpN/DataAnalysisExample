@@ -68,8 +68,8 @@ ggplot() +
 geom_point(data = data_scores, aes(x = NMDS1, y = NMDS2, color = Critics), size = 2.5, alpha = 0.6) +
 annotate(geom = 'label', x = -1, y = 5.5, size = 9.5, label = paste('Stress: ', round(nmds_result$stress, digits = 2))) +
 scale_color_discrete(name = "Critics Rating", labels = c('lower than 79', '79 or higher'))
-# https://github.com/DatExpN/DataAnalysisExample/blob/main/RPlot1.png
-# https://github.com/DatExpN/DataAnalysisExample/blob/main/RPlot2.png
+# https://github.com/DatExpN/DataAnalysisExample/blob/main/NMDSAudienceRating.png
+# https://github.com/DatExpN/DataAnalysisExample/blob/main/NMDSCriticsRating.png
 
 # Как мы и предполагали, фильмы разделяются по рейтингу: в нашем случае горизонтальное измерение может быть описано 
 # при помощи информации об оценках аудитории, а вертикальное измерение через информацию об оценках критиков.
