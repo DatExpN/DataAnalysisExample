@@ -27,6 +27,7 @@ g2 <- set_vertex_attr(g2, 'core', v = coreness)
 summary(g2)
 # Визуализируем полученный граф с учетом информации о числе контактов и позиции относительно ядра/периферии. Красным цветом обозначены вершины, попавшие в ядро, размер выделяет вершины с числом контактов больше 20.
 plot(g2, edge.curved = 0.2, vertex.color= ifelse(V(g2)$core > 0, 'red', 'grey'), vertex.size = ifelse(V(g2)$degree > 20, 6, 2.5), layout=layout_with_fr, vertex.label = NA)
+# https://github.com/DatExpN/DataAnalysisExample/blob/main/RPlot9.png
 # Посмотрим, какие актеры имеют наибольшее число контактов в индустрии (контакты основаны на числе фильмов, в которых они снимались вместе с другими актерами).
 actors <- as.data.frame(cbind(V(g2)$name, V(g2)$degree))
 colnames(actors) <- c('Actor', 'Number_of_contacts')
