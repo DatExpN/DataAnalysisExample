@@ -185,7 +185,10 @@ ntree.1 <- 45 # пробуем решения для разного числа �
 # где число ошибок распознавания не меняется.
 nodesize.1 <-1
 keep.forest.1 <- TRUE
-modelRandomForest <- randomForest(Revenue ~., data = train.df, ntree=ntree.1, mtry=floor(sqrt(ncol(train.df))), replace=FALSE, nodesize = nodesize.1, importance=TRUE, localImp=FALSE, proximity=FALSE, norm.votes=TRUE, do.trace=ntree.1/10, keep.forest=keep.forest.1, corr.bias=FALSE, keep.inbag=FALSE) 
+modelRandomForest <- randomForest(Revenue ~., data = train.df, ntree=ntree.1, mtry=floor(sqrt(ncol(train.df))), 
+                                  replace=FALSE, nodesize = nodesize.1, importance=TRUE, localImp=FALSE, proximity=FALSE, 
+                                  norm.votes=TRUE, do.trace=ntree.1/10, keep.forest=keep.forest.1, corr.bias=FALSE, 
+                                  keep.inbag=FALSE) 
 tree_predicted1 <- predict(modelRandomForest, newdata = train.df[, -5])
 tree_predicted2 <- predict(modelRandomForest, newdata = valid.df[, -5])
 tablerf1 <- table(train.df$Revenue, tree_predicted1)
