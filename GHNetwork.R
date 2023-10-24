@@ -68,7 +68,7 @@ modularity(love1) # модулярность говорит о том, наск�
 sizes(love1) # смотрим количество и размер полученных сообществ
 plot(g2, vertex.color=membership(love1), edge.curved = 0.2, vertex.size=3.5, vertex.label = NA, 
      edge.color = "grey", layout=layout_with_fr) # визуализируем сеть с учетом информации о сообществах
-love2 <- ifelse(love1$membership == 5 | love1$membership == 8 | love1$membership == 10 | love1$membership == 14, love1$membership, 0)
+love2 <- ifelse(love1$membership == 5 | love1$membership == 9 | love1$membership == 13 | love1$membership == 16, love1$membership, 0)
 love2 <- as.factor(love2)
 g2 <- set_vertex_attr(g2, 'comluv', v = love2)
 colrs <- c('grey',"orange", "tomato", "green", 'blue')
