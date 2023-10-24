@@ -31,6 +31,7 @@ c <- components(g1, mode = 'weak')
 c$csize
 g2 <- decompose(g1, mode = 'weak', min.vertices = 1724)
 g2 <- g2[[1]]
+g2 <- simplify(g2, remove.loops=TRUE, remove.multiple =TRUE)
 degree_graph <- degree(g2, mode = 'all') # считаем число контактов каждого актера
 g2 <- set_vertex_attr(g2, 'degree', v = degree_graph)
 coreness <- core_periphery(g2, method = "rk1_dc")$vec # определяем позицию вершины относительно ядра/периферии
