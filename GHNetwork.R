@@ -73,7 +73,7 @@ love2 <- as.factor(love2)
 g2 <- set_vertex_attr(g2, 'comluv', v = love2)
 colrs <- c('grey',"orange", "tomato", "green", 'blue')
 plot(g2, vertex.color= colrs[V(g2)$comluv], edge.curved = 0.2, vertex.size=3.5, vertex.label = NA, 
-     edge.color = "grey", layout=layout_with_fr) # визуализируем только большие сообщества (с числом вершин более 100)
+     edge.color = "grey", layout=layout_with_fr) # визуализируем только большие сообщества (с числом вершин от 100)
 # https://github.com/DatExpN/DataAnalysisExample/blob/main/GraphLouvain.png
 set.seed(123)
 com1 <- cluster_edge_betweenness(g2) # применяем алгоритм поиска сообществ Girvan-Newman
@@ -85,5 +85,6 @@ com2 <- ifelse(com1$membership == 1 | com1$membership == 4 | com1$membership == 
 com2 <- as.factor(com2)
 g2 <- set_vertex_attr(g2, 'comnew', v = com2)
 colrs <- c('grey','red', 'blue','purple','pink')
-plot(g2, vertex.color= colrs[V(g2)$comnew], edge.curved = 0.2, vertex.size=3.5, vertex.label = NA, edge.color = "grey", layout=layout_with_fr) # визуализируем только большие сообщества (с числом вершин более 100)
+plot(g2, vertex.color= colrs[V(g2)$comnew], edge.curved = 0.2, vertex.size=3.5, vertex.label = NA, edge.color = "grey", layout=layout_with_fr) # визуализируем только большие сообщества (с числом вершин от 70 и выше). 
+# В данном случае берем такие границы деления, потому что этот алгоритм делит граф на большое число небольших сообществ.
 # https://github.com/DatExpN/DataAnalysisExample/blob/main/GraphNewman.png
