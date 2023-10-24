@@ -81,9 +81,9 @@ modularity(com1) # модулярность говорит о том, наско
 # В нашем случае модулярность первого и второго решения практически одинаковая (76-78%)
 sizes(com1) # смотрим количество и размер полученных сообществ
 plot(g2, vertex.color=membership(com1), edge.curved = 0.2, vertex.size=3.5, vertex.label = NA, edge.color = "grey", layout=layout_with_fr) # визуализируем сеть с учетом информации о комьюнити
-com2 <- ifelse(com1$membership == 10 | com1$membership < 5 | com1$membership == 6, com1$membership, 0)
+com2 <- ifelse(com1$membership == 1 | com1$membership == 4 | com1$membership == 12 | com1$membership == 25, com1$membership, 0)
 com2 <- as.factor(com2)
 g2 <- set_vertex_attr(g2, 'comnew', v = com2)
-colrs <- c('grey','orange','red','green','blue','purple','pink')
+colrs <- c('grey','red', 'blue','purple','pink')
 plot(g2, vertex.color= colrs[V(g2)$comnew], edge.curved = 0.2, vertex.size=3.5, vertex.label = NA, edge.color = "grey", layout=layout_with_fr) # визуализируем только большие сообщества (с числом вершин более 100)
 # https://github.com/DatExpN/DataAnalysisExample/blob/main/GraphNewman.png
