@@ -92,6 +92,7 @@ com2 <- replace(com2, com2 == 4, 3)
 com2 <- replace(com2, com2 == 12, 4)
 com2 <- replace(com2, com2 == 25, 5)
 g2 <- set_vertex_attr(g2, 'comnew', v = com2)
+g2 <- set_vertex_attr(g2, 'louvain', v = love1$membership)
 colrs <- c('grey','red', 'blue','purple','pink')
 plot(g2, vertex.color= colrs[as.factor(V(g2)$comnew)], edge.curved = 0.2, vertex.size=3.5, vertex.label = NA, edge.color = "grey", layout=layout_with_fr) # визуализируем только большие сообщества (с числом вершин от 70 и выше). 
 # В данном случае берем такие границы деления, потому что этот алгоритм делит граф на большое число небольших сообществ.
