@@ -58,3 +58,30 @@ actors2$Actor <- factor(actors2$Actor, levels = actors2$Actor[order(actors2$Numb
 ggplot(actors2, aes(x=Actor, y=Number_of_contacts)) + 
 geom_bar(stat = "identity", fill = ifelse(actors2$Number_of_contacts > 20, 'red', 'grey')) + coord_flip()
 # https://github.com/DatExpN/DataAnalysisExample/blob/main/PopularActors.png
+
+# Посмотрим, на какие сообщества (community) разделится наша сеть - в данном случае сообщество будет объединять актеров, 
+# которые часто снимаются вместе. Попробуем два алгоритма - Louvain и Girvan-Newman.
+set.seed(123)
+love1 <- cluster_louvain(g2) # применяем алгоритм поиска сообществ Louvain
+modularity(love1) # модулярность говорит о том, насколько хорошо сеть разделилась на сообщества
+sizes(love1) # смотрим количество и размер полученных сообществ
+plot(g2, vertex.color=membership(love1), edge.curved = 0.2, vertex.size=3.5, vertex.label = NA, 
+     edge.color = "grey", layout=layout_with_fr) # визуализируем сеть с учетом информации о сообществах
+love2 <- ifelse(love1$membership == 5 | love1$membership == 8 | love1$membership == 10 | love1$membership == 14, love1$membership, 0)
+love2 <- as.factor(love2)
+g2 <- set_vertex_attr(g2, 'comluv', v = love2)
+colrs <- c('grey',"orange", "tomato", "green", 'blue')
+plot(g2, vertex.color= colrs[V(g2)$comluv], edge.curved = 0.2, vertex.size=3.5, vertex.label = NA, 
+     edge.color = "grey", layout=layout_with_fr) # визуализируем только большие сообщества (с числом вершин более 100)
+#
+set.seed(123)
+com1 <- cluster_edge_betweenness(g2) # применяем алгоритм поиска сообществ Girvan-Newman
+modularity(com1) # модулярность говорит о том, насколько хорошо сеть разделилась на сообщества. В нашем случае модулярность первого и второго решения практически одинаковая (77-78%)
+sizes(com1) # смотрим количество и размер полученных сообществ
+plot(g2, vertex.color=membership(com1), edge.curved = 0.2, vertex.size=3.5, vertex.label = NA, edge.color = "grey", layout=layout_with_fr) # визуализируем сеть с учетом информации о комьюнити
+com2 <- ifelse(com1$membership == 10 | com1$membership < 5 | com1$membership == 6, com1$membership, 0)
+com2 <- as.factor(com2)
+g2 <- set_vertex_attr(g2, 'comnew', v = com2)
+colrs <- c('grey','orange','red','green','blue','purple','pink')
+plot(g2, vertex.color= colrs[V(g2)$comnew], edge.curved = 0.2, vertex.size=3.5, vertex.label = NA, edge.color = "grey", layout=layout_with_fr) # визуализируем только большие сообщества (с числом вершин более 100)
+#
