@@ -69,10 +69,11 @@ sizes(love1) # смотрим количество и размер получе�
 plot(g2, vertex.color=membership(love1), edge.curved = 0.2, vertex.size=3.5, vertex.label = NA, 
      edge.color = "grey", layout=layout_with_fr) # визуализируем сеть с учетом информации о сообществах
 love2 <- ifelse(love1$membership == 5 | love1$membership == 9 | love1$membership == 13 | love1$membership == 16, love1$membership, 0)
-love2 <- replace(love2, love2 == 5, 1)
-love2 <- replace(love2, love2 == 9, 2)
-love2 <- replace(love2, love2 == 13, 3)
-love2 <- replace(love2, love2 == 16, 4)
+love2 <- replace(love2, love2 == 0, 1)
+love2 <- replace(love2, love2 == 5, 2)
+love2 <- replace(love2, love2 == 9, 3)
+love2 <- replace(love2, love2 == 13, 4)
+love2 <- replace(love2, love2 == 16, 5)
 g2 <- set_vertex_attr(g2, 'comluv', v = love2)
 colrs <- c('grey',"orange", "tomato", "green", 'blue')
 plot(g2, vertex.color= colrs[as.factor(V(g2)$comluv)], edge.curved = 0.2, vertex.size=3.5, vertex.label = NA, 
@@ -85,9 +86,11 @@ modularity(com1) # модулярность говорит о том, наско
 sizes(com1) # смотрим количество и размер полученных сообществ
 plot(g2, vertex.color=membership(com1), edge.curved = 0.2, vertex.size=3.5, vertex.label = NA, edge.color = "grey", layout=layout_with_fr) # визуализируем сеть с учетом информации о комьюнити
 com2 <- ifelse(com1$membership == 1 | com1$membership == 4 | com1$membership == 12 | com1$membership == 25, com1$membership, 0)
-com2 <- replace(com2, com2 == 4, 2)
-com2 <- replace(com2, com2 == 12, 3)
-com2 <- replace(com2, com2 == 25, 4)
+com2 <- replace(com2, com2 == 0, 1)
+com2 <- replace(com2, com2 == 1, 2)
+com2 <- replace(com2, com2 == 4, 3)
+com2 <- replace(com2, com2 == 12, 4)
+com2 <- replace(com2, com2 == 25, 5)
 g2 <- set_vertex_attr(g2, 'comnew', v = com2)
 colrs <- c('grey','red', 'blue','purple','pink')
 plot(g2, vertex.color= colrs[as.factor(V(g2)$comnew)], edge.curved = 0.2, vertex.size=3.5, vertex.label = NA, edge.color = "grey", layout=layout_with_fr) # визуализируем только большие сообщества (с числом вершин от 70 и выше). 
