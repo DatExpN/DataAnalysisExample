@@ -73,7 +73,7 @@ g2 <- set_vertex_attr(g2, 'comluv', v = love2)
 colrs <- c('grey',"orange", "tomato", "green", 'blue')
 plot(g2, vertex.color= colrs[V(g2)$comluv], edge.curved = 0.2, vertex.size=3.5, vertex.label = NA, 
      edge.color = "grey", layout=layout_with_fr) # визуализируем только большие сообщества (с числом вершин более 100)
-#
+#https://github.com/DatExpN/DataAnalysisExample/blob/main/GraphLouvain.png
 set.seed(123)
 com1 <- cluster_edge_betweenness(g2) # применяем алгоритм поиска сообществ Girvan-Newman
 modularity(com1) # модулярность говорит о том, насколько хорошо сеть разделилась на сообщества. В нашем случае модулярность первого и второго решения практически одинаковая (77-78%)
