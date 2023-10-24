@@ -106,3 +106,4 @@ netg <- intergraph::asNetwork(g2)
 summary(netg)
 ggnet2(netg, color = 'comluv', palette = c('1' = 'grey67', '2' = 'yellow', '3' = 'limegreen', '4' = 'turquoise1', '5' = 'orangered'), 
        edge.size = 0.01, mode = 'fruchtermanreingold', size = 2.5) + guides(color = FALSE, size = FALSE) # визуализируем сообщества размером более 100 вершин, полученные после применения Louvain algorithm
+# https://github.com/DatExpN/DataAnalysisExample/blob/main/GraphLouvain2.png
