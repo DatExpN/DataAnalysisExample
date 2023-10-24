@@ -92,8 +92,17 @@ com2 <- replace(com2, com2 == 4, 3)
 com2 <- replace(com2, com2 == 12, 4)
 com2 <- replace(com2, com2 == 25, 5)
 g2 <- set_vertex_attr(g2, 'comnew', v = com2)
-g2 <- set_vertex_attr(g2, 'louvain', v = love1$membership)
 colrs <- c('grey','red', 'blue','purple','pink')
 plot(g2, vertex.color= colrs[as.factor(V(g2)$comnew)], edge.curved = 0.2, vertex.size=3.5, vertex.label = NA, edge.color = "grey", layout=layout_with_fr) # визуализируем только большие сообщества (с числом вершин от 70 и выше). 
 # В данном случае берем такие границы деления, потому что этот алгоритм делит граф на большое число небольших сообществ.
 # https://github.com/DatExpN/DataAnalysisExample/blob/main/GraphNewman.png
+
+# Дополнительный способ визуализации графа возможен при помощи ggnet2. 
+# Для этого потребуется перейти от объекта igraph к объекту network. 
+library(intergraph)
+library(network)
+library(GGally)
+netg <- intergraph::asNetwork(g2)
+summary(netg)
+ggnet2(netg, color = 'comluv', palette = c('1' = 'grey67', '2' = 'yellow', '3' = 'limegreen', '4' = 'turquoise1', '5' = 'orangered'), 
+       edge.size = 0.01, mode = 'fruchtermanreingold', size = 2.5) + guides(color = FALSE, size = FALSE) # визуализируем сообщества размером более 100 вершин, полученные после применения Louvain algorithm
