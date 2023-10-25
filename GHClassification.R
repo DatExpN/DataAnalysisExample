@@ -154,37 +154,45 @@ grid.arrange(p1, p2, p3, p4)
 # https://github.com/DatExpN/DataAnalysisExample/blob/main/ClusteringResult.png
 
 
-# Далее мы будем решать задачу предсказания высокой выручки фильмов. Здесь для нас высокая выручка - 
-# равная или больше медианного значения 23530892. Для начала построим модель логистической регрессии.
-
-
+# Далее мы будем решать задачу предсказания высокой выручки фильмов. Здесь для нас высокая выручка - равная или больше медианного значения 23530892. Для начала построим модель логистической регрессии.
 df_logit <- df[, c(1:3, 5:6, 10)]
 levels(df_logit$MainGenre) <- c('Other', 'Comedy', 'Action', 'Crime', 'Drama')
-model_reg <- glm(Revenue ~ ., data = df_logit, family = binomial)
-pR2 = 1 - model_reg$deviance / model_reg$null.deviance
-pR2
+ggplot(df_logit, aes(MainGenre, fill = Revenue)) +
+geom_bar() +
+coord_flip() # при помощи визуализации посмотрим фильмы каких жанров приносят большую выручку
+# Так как мы решаем задачу предсказания, разделим выборку на обучающую и тестовую
+set.seed(123)
+train.index <- sample(c(1:dim(df_logit)[1]), dim(df_logit)[1]*0.5)
+train.df <- df_logit[train.index, ]
+valid.df <- df_logit[-train.index, ]
+model_reg <- glm(Revenue ~ ., data = train.df, family = binomial)
 library(DescTools)
-PseudoR2(model_reg, c('McFadden', 'Nagel'))
-coef <- as.data.frame(exp(coef(model_reg))/(1+exp(coef(model_reg))))
-coef
+PseudoR2(model_reg, c('McFadden', 'Nagel')) # считаем Pseudo R2 для модели
 library(performance)
-check_collinearity(model_reg)
+check_collinearity(model_reg) # проверка на мультиколлинеарность
+coef <- as.data.frame(exp(coef(model_reg))/(1+exp(coef(model_reg)))) # перевели коэффициенты в более удобную форму для интерпретации
+coef 
 library(sjPlot)
-plot_model(model_reg, vline.color = 'red')
-# https://github.com/DatExpN/DataAnalysisExample/blob/main/OddsRatios.png
-summary(model_reg) # Значимыми для предсказания высокой выручки является переменная длительность фильма и 
-# переменная жанр фильма: фильмы с большей длительностью и жанром Other (так как мы перекодировали переменную жанр, 
-# в этом случае значит, что жанр должен быть не драма, комедия, экшен или криминал) с наибольшей вероятностью соберут 
-# большую кассу. 
-
-
+plot_model(model_reg, vline.color = 'red') # Удобная визуальная форма представления коэффициентов
+summary(model_reg) # Значимыми для предсказания высокой выручки является переменная длительность фильма и переменная жанр фильма: фильмы с большей длительностью и жанром Other с наибольшей вероятностью соберут большую кассу. Так как мы перекодировали переменную жанр, в этом случае значит, что жанр должен быть не комедия, экшен или криминал: изменение жанра с Other на комедию, экшен или криминал уменьшает вероятность получения высокой выручки.
+# Используя тестовую выборку посмотрим, насколько хорошо наша модель предсказывает высокую выручку.
+pred_logit <- predict(model_reg, valid.df[, -5], type = 'response')
+r_pred = rep(0, dim(valid.df)[1])
+r_pred[pred1 > .5] = 1
+table_logit <- table(valid.df$Revenue, r_pred)
+table_logit # Для тестовой выборки 76 значений верно распознаны как фильмы с небольшой выручкой, 210 значений верно распознаны как фильмы с большой выручкой.
+mean(r_pred == valid.df$Revenue) # Смотрим процент верно предсказанных значений, он не очень большой - всего 57%.
+library(ROCR)
+pred <- prediction(pred1, valid.df$Revenue)
+perf <- performance(pred, "tpr", "fpr")
+plot(perf, colorize=TRUE) # Еще один способ посмотреть на точность классификатора - визуализировать ROC кривую и посчитать значение auc. Полученная визуализация опять же говорит нам о том, что классификатор работает плохо.
+unlist(slot(performance(pred, "auc"), "y.values"))
 # Далее для решения задачи предсказания большой выручки попробуем алгоритм дерева решений.
-
 library(rpart)
 df_tree <- df[, c(1:3, 5:6, 10)]
-# разделяем выборку на обучающую и тестовую
+# Так как мы решаем задачу предсказания, здесь нам также понадобится тестовая и обучающая выборки.
 set.seed(456)
-train.index <- sample(c(1:dim(df_tree)[1]), dim(df_tree)[1]*0.5)
+train.index <- sample(c(1:dim(df_tree)[1]), dim(df_tree)[1]*0.5) 
 train.df <- df_tree[train.index, ]
 valid.df <- df_tree[-train.index, ]
 model <- rpart(Revenue ~ ., data = train.df, method = 'class', control = rpart.control(minsplit = 7, minbucket = 10, maxdepth = 10))
@@ -192,44 +200,20 @@ library(rpart.plot)
 library(RColorBrewer)
 library(rattle)
 rpart.plot(model, type=2, extra = 1)
-# https://github.com/DatExpN/DataAnalysisExample/blob/main/DecisionTree.png
-
-# Как и в случае модели логистической регрессии, здесь мы видим, что жанр является важной переменной для предсказания 
-# высокой выручки фильма. Следующая развилка - это год релиза фильма: если релиз был в 1993 или позже, тогда для нас 
-# важен рейтинг зрителей; если ранее 1993, тогда следующая развилка - это год релиза ранее 1961 и затем рейтинг критиков. 
-# Интересное наблюдение, что если фильм недавнего производства (1993 и позже), тогда для предсказания высокой выручки 
-# важен рейтинг аудитории, но для более поздних фильмов (до 1961) важен рейтинг критиков. 
-# Однако мы должны с осторожностью интерпретировать эти результаты, потому что данная модель дает верное предсказание 
-# только в 61% случаев.
-
-predicted_measure1 <- predict(model, train.df[ , -5], type = 'class')
-table_mat1 <- table(train.df$Revenue, predicted_measure1)
-table_mat1
-predicted_measure2 <- predict(model, valid.df[ , -5], type = 'class')
+# Как и в случае модели логистической регрессии, здесь мы видим, что жанр является важной переменной для предсказания высокой выручки фильма. Следующая развилка - это год релиза фильма: если релиз был в 1993 или позже, тогда для нас важен рейтинг зрителей; если ранее 1993, тогда следующая развилка - это год релиза ранее 1961 и затем рейтинг критиков. Интересное наблюдение, что если фильм недавнего производства (1993 и позже), тогда для предсказания высокой выручки важен рейтинг аудитории, но для более поздних фильмов (до 1961) важен рейтинг критиков. Однако мы должны с осторожностью интерпретировать эти результаты, потому что данная модель дает верное предсказание только в 61% случаев.
+predicted_measure2 <- predict(model, valid.df[ , -5], type = 'class') 
 table_mat2 <- table(valid.df$Revenue, predicted_measure2)
-table_mat2
+table_mat2 # Смотрим количество верно предсказанных значений для тестовой выборки: верно распознано 92 фильма как фильмы с небольшой выручкой, верно распознано 213 фильмов как фильмы с большой выручкой
 accuracy_Test <- sum(diag(table_mat2)) / sum(table_mat2)
 print(paste('Accuracy for test', accuracy_Test))
-
-
 # Чтобы улучшить модель, мы используем алгоритм Random Forest.
-
-
 library(randomForest)
 set.seed(3217)
-ntree.1 <- 45 # пробуем решения для разного числа деревьев, останавливаемся на том решении, 
-# где число ошибок распознавания не меняется.
+ntree.1 <- 50 # пробуем решения для разного числа деревьев, останавливаемся на том решении, где число ошибок распознавания не меняется
 nodesize.1 <-1
 keep.forest.1 <- TRUE
-modelRandomForest <- randomForest(Revenue ~., data = train.df, ntree=ntree.1, mtry=floor(sqrt(ncol(train.df))), 
-                                  replace=FALSE, nodesize = nodesize.1, importance=TRUE, localImp=FALSE, proximity=FALSE, 
-                                  norm.votes=TRUE, do.trace=ntree.1/10, keep.forest=keep.forest.1, corr.bias=FALSE, 
-                                  keep.inbag=FALSE) 
-tree_predicted1 <- predict(modelRandomForest, newdata = train.df[, -5])
+modelRandomForest <- randomForest(Revenue ~., data = train.df, ntree=ntree.1, mtry=floor(sqrt(ncol(train.df))), replace=FALSE, nodesize = nodesize.1, importance=TRUE, localImp=FALSE, proximity=FALSE, norm.votes=TRUE, do.trace=ntree.1/10, keep.forest=keep.forest.1, corr.bias=FALSE, keep.inbag=FALSE) 
 tree_predicted2 <- predict(modelRandomForest, newdata = valid.df[, -5])
-tablerf1 <- table(train.df$Revenue, tree_predicted1)
 tablerf2 <- table(valid.df$Revenue, tree_predicted2)
-tablerf1
 tablerf2 # смотрим улучшилась ли работа алгоритма по количеству верно распознанных наблюдений
 varImpPlot(modelRandomForest, sort=F) # можем увидеть какие переменные наиболее важны для классификатора
-# https://github.com/DatExpN/DataAnalysisExample/blob/main/RFVariables.png
