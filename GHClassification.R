@@ -219,7 +219,11 @@ library(RColorBrewer)
 library(rattle)
 rpart.plot(model, type=2, extra = 1)
 # https://github.com/DatExpN/DataAnalysisExample/blob/main/DecisionTree.png
-# Как и в случае модели логистической регрессии, здесь мы видим, что жанр является важной переменной для предсказания высокой выручки фильма. Следующая развилка - это год релиза фильма: если релиз был в 1993 или позже, тогда для нас важен рейтинг зрителей; если ранее 1993, тогда следующая развилка - это год релиза ранее 1961 и затем рейтинг критиков. Интересное наблюдение, что если фильм недавнего производства (1993 и позже), тогда для предсказания высокой выручки важен рейтинг аудитории, но для более поздних фильмов (до 1961) важен рейтинг критиков. Однако мы должны с осторожностью интерпретировать эти результаты, потому что данная модель дает верное предсказание только в 61% случаев.
+# Как и в случае модели логистической регрессии, здесь мы видим, что жанр является важной переменной для предсказания высокой выручки фильма. 
+# Следующая развилка - это год релиза фильма: если релиз был в 1993 или позже, тогда для нас важен рейтинг зрителей; если ранее 1993, 
+# тогда следующая развилка - это год релиза ранее 1961 и затем рейтинг критиков. Интересное наблюдение, что если фильм недавнего производства (1993 и позже), 
+# тогда для предсказания высокой выручки важен рейтинг аудитории, но для более поздних фильмов (до 1961) важен рейтинг критиков. 
+# Однако мы должны с осторожностью интерпретировать эти результаты, потому что данная модель дает верное предсказание только в 61% случаев.
 predicted_measure2 <- predict(model, valid.df[ , -5], type = 'class') 
 table_mat2 <- table(valid.df$Revenue, predicted_measure2)
 table_mat2 # Смотрим количество верно предсказанных значений для тестовой выборки: верно распознано 92 фильма как фильмы с небольшой выручкой, верно распознано 213 фильмов как фильмы с большой выручкой
@@ -231,7 +235,9 @@ set.seed(3217)
 ntree.1 <- 50 # пробуем решения для разного числа деревьев, останавливаемся на том решении, где число ошибок распознавания не меняется
 nodesize.1 <-1
 keep.forest.1 <- TRUE
-modelRandomForest <- randomForest(Revenue ~., data = train.df, ntree=ntree.1, mtry=floor(sqrt(ncol(train.df))), replace=FALSE, nodesize = nodesize.1, importance=TRUE, localImp=FALSE, proximity=FALSE, norm.votes=TRUE, do.trace=ntree.1/10, keep.forest=keep.forest.1, corr.bias=FALSE, keep.inbag=FALSE) 
+modelRandomForest <- randomForest(Revenue ~., data = train.df, ntree=ntree.1, mtry=floor(sqrt(ncol(train.df))), replace=FALSE, 
+                                  nodesize = nodesize.1, importance=TRUE, localImp=FALSE, proximity=FALSE, norm.votes=TRUE, do.trace=ntree.1/10, 
+                                  keep.forest=keep.forest.1, corr.bias=FALSE, keep.inbag=FALSE) 
 tree_predicted2 <- predict(modelRandomForest, newdata = valid.df[, -5])
 tablerf2 <- table(valid.df$Revenue, tree_predicted2)
 tablerf2 # смотрим улучшилась ли работа алгоритма по количеству верно распознанных наблюдений
