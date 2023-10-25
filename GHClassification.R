@@ -119,7 +119,9 @@ pam_fit$clusinfo
 dd <- cbind(df_clust, cluster = pam_fit$clustering)
 dd$cluster <- as.factor(dd$cluster)
 sapply(dd, class)
-fviz_silhouette(pam_fit, palette = "jco", ggtheme = theme_classic()) # график показывает насколько хорошо 5 кластеров описывают наши данные
+fviz_silhouette(pam_fit, palette = "jco", ggtheme = theme_classic()) # График показывает насколько хорошо данные кластеризуются.
+# По графику мы смотрим каково среднее значение silhouette coefficient для каждого кластера (1- это максимальное значение при идеальной кластеризации).
+# https://github.com/DatExpN/DataAnalysisExample/blob/main/ClustersSilhouettePlot.png
 km_stats <- cluster.stats(gower_dist, pam_fit$clustering)
 km_stats$dunn # Этот индекс также позволяет нам оценить, насколько хорошо данные кластеризуемы. 
 # Чем выше значение этого индекса, тем лучше, так как в идеальной ситуации мы хотим получить плотные, 
