@@ -57,7 +57,7 @@ data_scores <- cbind(data_scores, df[, 6:10])
 # Визуализируем наши данные при помощи координат, которые мы получили.
 
 library(ggplot2)
-ggplot() +
+ggplot() + 
 geom_point(data = data_scores, aes(x = NMDS1, y = NMDS2, color = Rating), size = 2.5, alpha = 0.6) +
 annotate(geom = 'label', x = -1, y = 5.5, size = 9.5, label = paste('Stress: ', round(nmds_result$stress, digits = 2))) +
 scale_color_discrete(name = "Audience Rating", labels = c('lower than 7.9', '7.9 or higher'))
@@ -104,8 +104,8 @@ for(i in 2:10){
   sil_width[i] <- pam_fit$silinfo$avg.width
 }
 plot(1:10, sil_width,
-     xlab = "Number of clusters",
-     ylab = "Silhouette Width")
+xlab = "Number of clusters",
+ylab = "Silhouette Width")
 lines(1:10, sil_width) # График говорит какое число кластеров является оптимальным (в этом случае 5 кластеров).
 set.seed(123)
 pam_fit <- pam(gower_dist, diss = TRUE, k = 5)
@@ -136,20 +136,17 @@ geom_text(aes(label= ..count..), stat = "count", position = position_stack(vjust
 p2 <- ggplot(dd, aes(MainGenre, fill = Rating)) +
 geom_bar() +
 scale_fill_manual(values = c("grey", "purple"), name = 'Audience Rating', labels = c('lower 7.9', '7.9 or higher')) + 
-theme(axis.title.x = element_blank(),
-       axis.title.y = element_blank()) + 
+theme(axis.title.x = element_blank(), axis.title.y = element_blank()) + 
 geom_text(aes(label= ..count..), stat = "count", position = position_stack(vjust = 0.5))
 p3 <- ggplot(dd, aes(MainGenre, fill = Year)) +
 geom_bar() +
 scale_fill_manual(values = c("grey", "purple"), name = 'Year of release', labels = c('before 1999', '1999 or later')) + 
-  theme(axis.title.x = element_blank(),
-        axis.title.y = element_blank()) + 
+theme(axis.title.x = element_blank(), axis.title.y = element_blank()) + 
 geom_text(aes(label= ..count..), stat = "count", position = position_stack(vjust = 0.5))
 p4 <- ggplot(dd, aes(MainGenre, fill = Critics)) +
 geom_bar() +
 scale_fill_manual(values = c("grey", "purple"), name = 'Critics Rating', labels = c('lower 79', '79 or higher')) + 
-theme(axis.title.x = element_blank(),
-      axis.title.y = element_blank()) + 
+theme(axis.title.x = element_blank(), axis.title.y = element_blank()) + 
 geom_text(aes(label= ..count..), stat = "count", position = position_stack(vjust = 0.5))
 grid.arrange(p1, p2, p3, p4)
 # https://github.com/DatExpN/DataAnalysisExample/blob/main/ClusteringResult.png
@@ -231,8 +228,8 @@ ntree.1 <- 50 # пробуем решения для разного числа �
 nodesize.1 <-1
 keep.forest.1 <- TRUE
 modelRandomForest <- randomForest(Revenue ~., data = train.df, ntree=ntree.1, mtry=floor(sqrt(ncol(train.df))), replace=FALSE, 
-                                  nodesize = nodesize.1, importance=TRUE, localImp=FALSE, proximity=FALSE, norm.votes=TRUE, do.trace=ntree.1/10, 
-                                  keep.forest=keep.forest.1, corr.bias=FALSE, keep.inbag=FALSE) 
+nodesize = nodesize.1, importance=TRUE, localImp=FALSE, proximity=FALSE, norm.votes=TRUE, do.trace=ntree.1/10, 
+keep.forest=keep.forest.1, corr.bias=FALSE, keep.inbag=FALSE) 
 tree_predicted2 <- predict(modelRandomForest, newdata = valid.df[, -5])
 tablerf2 <- table(valid.df$Revenue, tree_predicted2)
 tablerf2 # смотрим улучшилась ли работа алгоритма по количеству верно распознанных наблюдений
