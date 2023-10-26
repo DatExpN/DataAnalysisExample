@@ -223,7 +223,7 @@ print(paste('Accuracy for test', accuracy_Test)) # 61% верно классиф
 
 # Чтобы улучшить модель, попробуем использовать алгоритм Random Forest.
 library(randomForest)
-set.seed(3217)
+set.seed(456)
 ntree.1 <- 50 # пробуем решения для разного числа деревьев, останавливаемся на том решении, где число ошибок распознавания не меняется
 nodesize.1 <-1
 keep.forest.1 <- TRUE
