@@ -1,4 +1,4 @@
-**Multidimentional Scaling, Logistic regression, PAM clustering algorithm, Decision tree algorithm, Random forest algorithm, GBM, Social Network Analysis.**
+**Multidimentional Scaling, Logistic regression, PAM clustering algorithm, Decision tree algorithm, Random forest algorithm, GBM, Social Network Analysis, Text Analysis.**
 
 
 **На примере базы данных, содержащей информацию о 1000 фильмах и их оценках на сайте IMDB.** 
