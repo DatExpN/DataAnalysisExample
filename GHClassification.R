@@ -235,19 +235,19 @@ print(paste('Accuracy for test', accuracy_Test2))
 varImpPlot(modelRandomForest, sort=F) # можем увидеть какие переменные наиболее важны для классификатора
 # https://github.com/DatExpN/DataAnalysisExample/blob/main/RFVariables.png
 
-# Чтобы улучшить модель, попробуем алгоритм Gradient Boosting.
+# Далее для решения задачи предсказания большой выручки попробуем алгоритм Gradient Boosting.
 library(gbm)
 set.seed(456)
-ntree.1 <- 500 # Смотрим как изменяется критерий качества после добавления классификаторов и принимаем решение какое количество деревьев выбрать.
+ntree.1 <- 500 # Смотрим как изменяется критерий качества после добавления классификаторов и принимаем решение какое количество деревьев выбрать
 nodesize.1 <- 10
 gbm.res <- gbm(Revenue ~., data = train.df, distribution='gaussian', n.trees=ntree.1, shrinkage=0.05, interaction.depth=5, 
                bag.fraction = 0.5, n.minobsinnode = nodesize.1, cv.folds = 0, keep.data=TRUE, verbose=TRUE)
 predicted_gbm <- predict(gbm.res, valid.df[, -5], n.trees = 20)
-head(predicted_gbm)
+summary(predicted_gbm)
 predicted_gbm2 <- rep(0, nrow(valid.df))
-predicted_gbm2[(predicted_gbm > 1.5)] <- 1 # Устанавливаем пороговое значение, чтобы определить классы, так как GBM предсказывает вероятность.
+predicted_gbm2[(predicted_gbm > 1.5)] <- 1 # Устанавливаем пороговое значение, чтобы определить классы, так как GBM предсказывает вероятность
 table_gbm <- table(valid.df$Revenue, predicted_gbm2)
-table_gbm # Смотрим число верно предсказанных значений по тестовой выборке.
+table_gbm # Смотрим число верно предсказанных значений по тестовой выборке
 accuracy_Test3 <- sum(diag(table_gbm)) / sum(table_gbm)
 print(paste('Accuracy for test', accuracy_Test3))
 
