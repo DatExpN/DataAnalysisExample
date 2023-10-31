@@ -196,6 +196,7 @@ unlist(slot(performance(pred, "auc"), "y.values")) # Значение AUC 0.59
 
 library(rpart)
 df_tree <- df[, c(1:3, 5:6, 10)]
+df_tree$MainGenre <- relevel(df_tree$MainGenre, ref = 'Other')
 # Так как мы решаем задачу предсказания, здесь также понадобится тестовая и обучающая выборки.
 set.seed(456)
 train.index <- sample(c(1:dim(df_tree)[1]), dim(df_tree)[1]*0.5) 
@@ -203,8 +204,6 @@ train.df <- df_tree[train.index, ]
 valid.df <- df_tree[-train.index, ]
 model <- rpart(Revenue ~ ., data = train.df, method = 'class', control = rpart.control(minsplit = 7, minbucket = 10, maxdepth = 10))
 library(rpart.plot)
-library(RColorBrewer)
-library(rattle)
 rpart.plot(model, type=2, extra = 1) # визуализируем дерево решений
 # https://github.com/DatExpN/DataAnalysisExample/blob/main/DecisionTree.png
 # Как и в случае модели логистической регрессии, здесь мы видим, что жанр является важной переменной для предсказания высокой выручки фильма. 
