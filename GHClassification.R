@@ -155,7 +155,7 @@ grid.arrange(p1, p2, p3, p4)
 # значения 23530892. Для начала построим модель логистической регрессии.
 
 df_logit <- df[, c(1:3, 5:6, 10)]
-levels(df_logit$MainGenre) <- c('Other', 'Comedy', 'Action', 'Crime', 'Drama')
+df_logit$MainGenre <- relevel(df_logit$MainGenre, ref = 'Other')
 ggplot(df_logit, aes(MainGenre, fill = Revenue)) +
 geom_bar() +
 coord_flip() # при помощи визуализации посмотрим фильмы каких жанров приносят большую выручку
