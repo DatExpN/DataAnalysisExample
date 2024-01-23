@@ -1,6 +1,6 @@
 # Пример SQL запросов. 
 # Дано три таблицы: 
-# shops - shopnumber, city, adress
+# shops - shopnumber, city, address
 # goods - id_good, category, good_name, price
 # sales - date, shopnumber, id_good, city
 
