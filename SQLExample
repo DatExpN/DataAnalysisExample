@@ -1,8 +1,8 @@
 # Пример SQL запросов. 
 # Дано три таблицы: 
-# shops - shopnumber, city, address
-# goods - id_good, category, good_name, price
-# sales - date, shopnumber, id_good, city
+# shops - shopnumber (код магазина), city (город), address (адрес)
+# goods - id_good (код товара), category (категория товара), good_name (название товара), price (цена)
+# sales - date (дата), shopnumber (код магазина), id_good (код товара), qty (кол-во проданных товаров в штуках)
 
 # Вывести таблицу, которая будет содержать информацию о магазине, городе, адресе, сумме товаров в штуках и сумме товаров в рублях.
 # Вывести нужно только записи по дате 01.01.2023
