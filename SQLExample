@@ -1,0 +1,53 @@
+# Пример SQL запросов. 
+# Дано три таблицы: 
+# shops - shopnumber, city, adress
+# goods - id_good, category, good_name, price
+# sales - date, shopnumber, id_good, city
+
+# Вывести таблицу, которая будет содержать информацию о магазине, городе, адресе, сумме товаров в штуках и сумме товаров в рублях.
+# Вывести нужно только записи по дате 01.01.2023
+select shopnumber, city, address, sum_count, sum_price
+from
+(select t2.shopnumber, t2.city, t2.address,  sum(t1.qty)over(partition by t2.shopnumber) as sum_count, t1.date, sum(t1.qty*t3.price)over(partition by t2.shopnumber) as sum_price
+from sales as t1 left join shops as t2 on t1.shopnumber = t2.shopnumber
+left join goods as t3 on t1.id_good = t3.id_good
+where t1.date = '2023-01-01') as t4
+group by shopnumber, city, address, sum_count, sum_price
+order by shopnumber
+
+# Вывести таблицу, которая будет содержать информацию о дате, городе и доле суммарных продаж в эту дату.
+# Вывести нужно только товары из категории "фильмы"
+select date, city, round(cast(s_date as decimal(10,2))/cast(s_all as decimal(10,2)),2) as share
+from
+(select t2.city, t1.date, sum(t1.qty*t3.price)over() as s_all,  sum(t1.qty*t3.price)over(partition by t1.date) as s_date
+from sales as t1 left join shops as t2 on t1.shopnumber = t2.shopnumber
+left join goods as t3 on t1.id_good = t3.id_good
+where t3.category = 'фильмы') as t4
+group by date, city, share
+order by date
+
+# Вывести таблицу, которая будет содержать информацию о дате, магазине и товаре.
+# Вывести информацию о топ-5 товаров по продажам в каждом магазине в каждую дату
+create table date_shop_c as
+(select shopnumber, date, id_good, sum(qty) as sum_qty
+from sales
+group by shopnumber, date, id_good)
+
+select date, shopnumber, id_good
+from
+(select *, row_number()over(partition by id_good order by sum_qty desc) as num_rank
+from date_shop_c) as t2
+where num_rank <= 5
+group by date, shopnumber, id_good
+
+# Вывести таблицу, которая будет содержать информацию о дате, магазине, категории товара и сумме в рублях за предыдущую дату.
+# Вывести информацию только о магазинах в Москве
+create table task_5 as
+(select t1.date, t1.shopnumber, t2.category, sum(t1.qty*t2.price)over(partition by t1.date) as general_sum 
+from sales as t1 left join goods as t2 on t1.id_good = t2.id_good
+left join shops as t3 on t1.shopnumber = t3.shopnumber
+where t3.city = 'Москва')
+
+select date + interval '1' day as date2, shopnumber, category, general_sum
+from task_5
+group by date2, shopnumber, category, general_sum
