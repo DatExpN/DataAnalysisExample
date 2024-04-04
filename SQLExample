@@ -4,11 +4,13 @@
 # goods - id_good (код товара), category (категория товара), good_name (название товара), price (цена)
 # sales - date (дата), shopnumber (код магазина), id_good (код товара), qty (кол-во проданных товаров в штуках)
 
-# Вывести таблицу, которая будет содержать информацию о магазине, городе, адресе, сумме товаров в штуках и сумме товаров в рублях.
+# Вывести таблицу, которая будет содержать информацию о магазине, городе, адресе, сумме товаров в штуках 
+и сумме товаров в рублях.
 # Вывести нужно только записи по дате 01.01.2023
 select shopnumber, city, address, sum_count, sum_price
 from
-(select t2.shopnumber, t2.city, t2.address,  sum(t1.qty)over(partition by t2.shopnumber) as sum_count, t1.date, sum(t1.qty*t3.price)over(partition by t2.shopnumber) as sum_price
+(select t2.shopnumber, t2.city, t2.address,  sum(t1.qty)over(partition by t2.shopnumber) 
+as sum_count, t1.date, sum(t1.qty*t3.price)over(partition by t2.shopnumber) as sum_price
 from sales as t1 left join shops as t2 on t1.shopnumber = t2.shopnumber
 left join goods as t3 on t1.id_good = t3.id_good
 where t1.date = '2023-01-01') as t4
