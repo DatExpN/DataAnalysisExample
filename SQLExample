@@ -53,3 +53,43 @@ where t3.city = 'Москва')
 select date + interval '1' day as date2, shopnumber, category, general_sum
 from task_5
 group by date2, shopnumber, category, general_sum
+
+# Необходимо написать запрос, который по таблице с интервалами объединит эти 
+# интервалы в случае если они пересекаются или граничат.
+# Пример таблицы
+start_date, end_date
+2020-01-01,2020-01-15
+2020-01-02,2020-01-02
+2019-12-31,2020-01-02
+2019-12-31,2020-01-01
+2020-01-13,2020-01-30
+2020-02-01,2020-02-05
+2020-02-15,2020-02-27
+2020-02-16,2020-02-19
+2020-02-03,2020-02-16
+2020-03-01,2020-05-04
+2020-06-12,2020-06-22
+2020-04-17,2020-06-19
+
+with united_table as (
+select t1.start_date, t1.end_date, t2.start_date as new_date_start, t2.end_date as new_date_end
+from table5 t1 left join table5 t2 on (t2.start_date <= t1.end_date and t2.start_date >= t1.start_date) 
+or (t2.end_date >= t1.start_date and 
+t2.end_date <= t1.end_date)),
+crt as (
+select *, min(new_date_start)over(partition by start_date) as min_v, max(new_date_end)over(partition by end_date) as max_v
+from united_table),
+crt2 as (
+select *, case when start_date < new_date_end and end_date > new_date_start and start_date > new_date_start 
+and start_date <> new_date_start AND end_date <> new_date_end then 1 end as filt
+from crt),
+crt3 as (
+select min_v, max_v
+from crt2
+where filt = 1),
+lag_range as (
+select min_v, max_v, lag(max_v) over (order by min_v) as prev_max_v
+from crt3)
+select min_v, max_v
+from lag_range
+where prev_max_v is null or min_v > prev_max_v
